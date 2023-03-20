@@ -5,20 +5,18 @@ const loadProduct = () => {
 };
 
 const displayProduct = (data) => {
-  console.log(data);
   const cards = document.getElementById("cards");
   data.forEach((product) => {
+    const isBookmark = checkBookmark(product.id)
+    console.log(isBookmark);
     const card = document.createElement("div");
     card.classList.add("card", "m-2");
 
     card.innerHTML = `
           <div class="bookmark-icon">
         
-          <i onclick="" 
-           class="fa-solid fa-bookmark"
-      "></i>
-          <i onclick="handleBookMark('${product.name}','${product.id}','${product.price}')" 
-           class="fa-regular fa-bookmark"
+          <i onclick="${isBookmark ? `handleRemoveBookmark('${product.id}')` : `handleBookmark('${product.name}','${product.id}','${product.price}')`}" 
+           class="${isBookmark ? 'fa-solid fa-bookmark' : 'fa-regular fa-bookmark'}"
       "></i>
 
         </div>
@@ -41,7 +39,7 @@ const displayProduct = (data) => {
 };
 
 // ! handle book mark
-const handleBookMark = (name, id, price) => {
+const handleBookmark = (name, id, price) => {
   const product = { name, id, price, bookmark: true }
   const previousBookMark = JSON.parse(localStorage.getItem('bookmark'))
   let bookmark = [];
@@ -68,5 +66,23 @@ const handleBookMark = (name, id, price) => {
   }
 }
 
+// handle remove bookmark 
+const handleRemoveBookmark = id => {
+  const previousBookmark = JSON.parse(localStorage.getItem('bookmark'))
+  const restOfThem = previousBookmark.filter(p => p.id != id)
+  localStorage.setItem('bookmark', JSON.stringify(restOfThem))
+}
+
+// check bookmark 
+const checkBookmark = id => {
+  const previousBookmark = JSON.parse(localStorage.getItem('bookmark'))
+  const isBookmark = previousBookmark?.find(p => p.id == id);
+  if (isBookmark) {
+    return true;
+  }
+  else {
+    return false;
+  }
+}
 
 loadProduct();
