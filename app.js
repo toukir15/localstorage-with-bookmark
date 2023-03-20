@@ -42,7 +42,30 @@ const displayProduct = (data) => {
 
 // ! handle book mark
 const handleBookMark = (name, id, price) => {
-  console.log(name, id, price);
+  const product = { name, id, price, bookmark: true }
+  const previousBookMark = JSON.parse(localStorage.getItem('bookmark'))
+  let bookmark = [];
+  // console.log(product);
+  if (previousBookMark) {
+    const isThisProductMarked = previousBookMark.find(p => p.id === id);
+    if (isThisProductMarked) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Something went wrong!',
+        footer: '<a href="">Why do I have this issue?</a>'
+      })
+    }
+    else {
+      bookmark.push(...previousBookMark, product)
+      localStorage.setItem('bookmark', JSON.stringify(bookmark))
+    }
+  }
+  else {
+    bookmark.push(product)
+    // console.log(bookmark);
+    localStorage.setItem('bookmark', JSON.stringify(bookmark))
+  }
 }
 
 
